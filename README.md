@@ -117,19 +117,20 @@ python tools/build_splash.py      # 渲染启动画面并校验外壳契约（#t
 
 ## 安装
 
-插件是一个普通的 DSH 客户端插件包，安装到某个 profile 即可：
+插件是一个普通的 DSH 客户端插件包，装进某个 profile 即可：
 
 ```bash
-# 直接从这个仓库装（pnpm 的 git 规格）
-dsh plugin --profile web add github:zmr234234-jpg/dsh-deepseek-splash
+# 直接从这个仓库装（npm 的 git 规格）
+dsh plugin --profile web add "github:zmr234234-jpg/dsh-deepseek-splash"
 
-# 或者先克隆，再装本地目录
+# 或者先克隆，再按本地目录装（link: 规格）
 git clone https://github.com/zmr234234-jpg/dsh-deepseek-splash
-dsh plugin --profile web add ./dsh-deepseek-splash
+dsh plugin --profile web add "link:/绝对/路径/dsh-deepseek-splash"
 ```
 
-在 GUI 里也可以用插件管理/插件市场安装这个目录。安装后刷新页面（客户端 bundle 在页面加载时注入）；
-桌面启动画面则在下一次启动应用时生效——它需要额外跑一次 `tools/build_splash.py --apply`，见上。
+DSH Desktop 里也可以直接用插件管理装本地目录（不依赖 CLI）。
+装完刷新界面即可（客户端 bundle 在页面加载时注入）；
+**桌面启动画面**那半还需要额外跑一次 `tools/build_splash.py --apply`，见上。
 
 ## 结构
 
