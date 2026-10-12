@@ -1,0 +1,6 @@
+# Keep the repository line-ending stable regardless of the platform that clones it.
+* text=auto eol=lf
+
+*.png binary
+*.gif binary
+*.ico binary

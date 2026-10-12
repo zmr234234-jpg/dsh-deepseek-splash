@@ -11,6 +11,7 @@ shots/
 
 # Intermediates from tools/trace_whale.py
 assets/whale.b64
+assets/whale.png
 assets/_preview-light.html
 
 # Backups and local scratch
