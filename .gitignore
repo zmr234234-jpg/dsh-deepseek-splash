@@ -1,0 +1,18 @@
+# Build output
+dist/
+
+# Python caches
+__pycache__/
+*.pyc
+
+# Verification frames captured with headless Edge.
+# The curated stills used by the README live in docs/ and ARE committed.
+shots/
+
+# Intermediates from tools/trace_whale.py
+assets/whale.b64
+assets/_preview-light.html
+
+# Backups and local scratch
+*.bak
+*.log

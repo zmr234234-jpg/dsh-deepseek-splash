@@ -1,0 +1,81 @@
+/* ============================================================================
+   dsh-deepseek-splash — launch-screen frame (DSH Desktop resources/splash.html).
+   The animation itself is src/splash.css; this file only dresses what is
+   around it: the colour the window paints before the curtain fades in, and the
+   boot lines the desktop shell writes into #status / #progress.
+   ========================================================================== */
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  color-scheme: dark light;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+  background: #05070e;
+}
+
+html[data-theme="light"],
+html[data-theme="light"] body {
+  background: #eef2fb;
+}
+
+/* The curtain owns z-index 2147483000; the boot lines have to sit above it. */
+.dss-boot {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 32px;
+  z-index: 2147483100;
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  padding: 0 28px;
+  text-align: center;
+  /* Never steal a click from the animation underneath. */
+  pointer-events: none;
+  color: #8d97b5;
+  text-shadow: 0 1px 12px rgba(5, 7, 14, 0.55);
+}
+
+html[data-theme="light"] .dss-boot {
+  color: #5c6784;
+  text-shadow: 0 1px 12px rgba(238, 242, 251, 0.75);
+}
+
+.dss-boot-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  opacity: 0.92;
+}
+
+.dss-boot-status {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* The shell writes one line per boot step and adds `.visible`; before its first
+   write the element stays out of the way. */
+.dss-boot-progress {
+  margin: 1px 0 0;
+  max-width: 74ch;
+  font-size: 12px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.dss-boot-progress.visible {
+  opacity: 0.66;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dss-boot-progress {
+    transition: none;
+  }
+}

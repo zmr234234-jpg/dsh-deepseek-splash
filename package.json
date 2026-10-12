@@ -1,0 +1,61 @@
+{
+  "name": "dsh-deepseek-splash",
+  "version": "1.0.0",
+  "description": "DeepSeek 开屏动画：把同一段鲸鱼片头（描边自绘 -> 点灯 -> 填充成形 -> 落款）接到 DSH Desktop 的启动画面，并作为可选的全屏客户端浮层。DeepSeek opening animation for DeepSeek Harness: the whale line-draw/fill/wordmark intro rendered as DSH Desktop's launch screen, plus the same animation available as an opt-in full-screen client overlay.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "default": "./lib/client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    },
+    "compatibility": {
+      "dsh": ">=0.1.0-rc.5"
+    }
+  },
+  "files": [
+    "lib",
+    "assets/whale.svg",
+    "assets/preview.html",
+    "cordis.patch.yml",
+    "README.md"
+  ],
+  "keywords": [
+    "deepseek",
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "client-plugin",
+    "splash",
+    "opening-animation"
+  ],
+  "license": "MIT",
+  "author": "zmr234234-jpg",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zmr234234-jpg/dsh-deepseek-splash.git"
+  },
+  "homepage": "https://github.com/zmr234234-jpg/dsh-deepseek-splash#readme",
+  "bugs": {
+    "url": "https://github.com/zmr234234-jpg/dsh-deepseek-splash/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ]
+}

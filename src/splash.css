@@ -1,0 +1,349 @@
+/* ============================================================================
+   dsh-deepseek-splash — DeepSeek opening animation for DeepSeek Harness
+   Hand-written source. tools/build_client.py inlines this file into lib/client.js.
+   Timeline is driven purely by animation-delay, so every phase stays in sync.
+   ========================================================================== */
+
+.dss-host { display: contents; }
+
+.dss-root {
+  /* ---------- palette: dark (default) ---------- */
+  --dss-accent: #4d6bfe;
+  --dss-accent-2: #8fb0ff;
+  --dss-ink: #f4f7ff;
+  --dss-dim: rgba(222, 231, 255, .6);
+  --dss-line: rgba(140, 168, 255, .15);
+  --dss-bg: radial-gradient(125% 95% at 50% 34%, #16213c 0%, #0b1120 44%, #05070e 100%);
+  --dss-halo: rgba(77, 107, 254, .55);
+  --dss-aurora-a: rgba(77, 107, 254, .5);
+  --dss-aurora-b: rgba(56, 189, 248, .3);
+  --dss-sheen: rgba(255, 255, 255, .5);
+  --dss-sheen-blend: screen;
+  --dss-whale-fill: url(#dssFillDark);
+  --dss-shadow: 0 0 34px rgba(77, 107, 254, .42);
+
+  /* ---------- timeline (ms) ---------- */
+  --dss-t-veil: 380ms;
+  --dss-d-draw: 260ms;   --dss-t-draw: 1000ms;
+  --dss-d-fill: 960ms;   --dss-t-fill: 460ms;
+  --dss-d-dots: 1140ms;  --dss-t-dot: 460ms;
+  --dss-d-word: 1260ms;  --dss-t-word: 640ms;
+  --dss-d-sub: 1430ms;   --dss-t-sub: 620ms;
+  --dss-d-halo: 140ms;   --dss-t-halo: 1200ms;
+  --dss-d-ring: 1200ms;  --dss-t-ring: 1150ms;
+  --dss-d-sheen: 1480ms; --dss-t-sheen: 860ms;
+  --dss-d-hint: 1180ms;  --dss-t-hint: 600ms;
+  --dss-t-exit: 560ms;
+
+  position: fixed;
+  inset: 0;
+  z-index: 2147483000;
+  overflow: hidden;
+  background: var(--dss-bg);
+  pointer-events: auto;
+  animation: dss-veil-in var(--dss-t-veil) ease-out both;
+}
+
+/* ---------- palette: light ---------- */
+.dss-root[data-theme="light"] {
+  --dss-ink: #0f1830;
+  --dss-dim: rgba(24, 37, 68, .58);
+  --dss-line: rgba(77, 107, 254, .16);
+  --dss-bg: radial-gradient(125% 95% at 50% 34%, #ffffff 0%, #eff3fd 46%, #e2e8f7 100%);
+  --dss-halo: rgba(77, 107, 254, .26);
+  --dss-aurora-a: rgba(77, 107, 254, .28);
+  --dss-aurora-b: rgba(56, 189, 248, .2);
+  --dss-sheen: rgba(77, 107, 254, .17);
+  --dss-sheen-blend: normal;
+  --dss-whale-fill: url(#dssFillLight);
+  --dss-shadow: 0 12px 38px rgba(31, 55, 130, .16);
+}
+
+/* ============================ backdrop ==================================== */
+
+.dss-aurora {
+  position: absolute;
+  width: 64vmax;
+  height: 64vmax;
+  border-radius: 50%;
+  filter: blur(58px);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.dss-aurora-a {
+  top: -24vmax; left: -14vmax;
+  background: radial-gradient(circle at 50% 50%, var(--dss-aurora-a), transparent 62%);
+  animation: dss-fade-in 1000ms ease-out 140ms both,
+             dss-drift-a 13s ease-in-out 600ms infinite alternate;
+}
+.dss-aurora-b {
+  right: -16vmax; bottom: -28vmax;
+  background: radial-gradient(circle at 50% 50%, var(--dss-aurora-b), transparent 64%);
+  animation: dss-fade-in 1200ms ease-out 260ms both,
+             dss-drift-b 17s ease-in-out 900ms infinite alternate;
+}
+
+.dss-grid {
+  position: absolute;
+  inset: -6%;
+  opacity: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--dss-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--dss-line) 1px, transparent 1px);
+  background-size: 46px 46px;
+  -webkit-mask-image: radial-gradient(64% 56% at 50% 40%, #000 0%, transparent 76%);
+  mask-image: radial-gradient(64% 56% at 50% 40%, #000 0%, transparent 76%);
+  animation: dss-fade-in 1300ms ease-out 420ms both;
+}
+
+/* ============================== stage ===================================== */
+
+.dss-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 3vmin, 36px);
+  padding: 6vmin;
+}
+
+.dss-mark {
+  position: relative;
+  width: min(52vmin, 520px);
+  max-width: 78vw;
+  filter: drop-shadow(var(--dss-shadow));
+  animation: dss-mark-settle 760ms cubic-bezier(.2, .7, .3, 1) 1480ms both;
+}
+
+.dss-halo {
+  position: absolute;
+  left: 50%; top: 52%;
+  width: 84%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(.6);
+  background: radial-gradient(circle at 50% 50%, var(--dss-halo) 0%, transparent 62%);
+  opacity: 0;
+  animation: dss-halo var(--dss-t-halo) cubic-bezier(.22, .61, .36, 1) var(--dss-d-halo) both;
+}
+
+.dss-ring {
+  position: absolute;
+  left: 50%; top: 52%;
+  width: 56%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  border: 1px solid var(--dss-accent);
+  transform: translate(-50%, -50%) scale(.58);
+  opacity: 0;
+  animation: dss-ring var(--dss-t-ring) cubic-bezier(.16, .84, .24, 1) var(--dss-d-ring) both;
+}
+
+/* the mark itself: path is drawn, then filled */
+.dss-whale-svg {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.dss-whale-path {
+  fill: var(--dss-whale-fill, var(--dss-ink));
+  fill-opacity: 0;
+  fill-rule: evenodd;
+  stroke: var(--dss-accent);
+  stroke-width: 3.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: dss-draw var(--dss-t-draw) cubic-bezier(.5, .05, .35, 1) var(--dss-d-draw) both,
+             dss-fill-in var(--dss-t-fill) cubic-bezier(.3, .7, .4, 1) var(--dss-d-fill) both,
+             dss-stroke-out 440ms ease-out calc(var(--dss-d-fill) + 150ms) both;
+}
+
+.dss-dot {
+  fill: var(--dss-accent);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: dss-dot-pop var(--dss-t-dot) cubic-bezier(.2, .9, .24, 1.3) var(--dss-d-dots) both,
+             dss-dot-pulse 1900ms ease-in-out calc(var(--dss-d-dots) + 640ms) infinite;
+}
+.dss-dot[data-dot="1"] {
+  animation-delay: calc(var(--dss-d-dots) + 130ms), calc(var(--dss-d-dots) + 780ms);
+}
+.dss-dot[data-dot="2"] {
+  animation-delay: calc(var(--dss-d-dots) + 260ms), calc(var(--dss-d-dots) + 920ms);
+}
+
+.dss-sheen {
+  position: absolute;
+  inset: -10% -8%;
+  pointer-events: none;
+  mix-blend-mode: var(--dss-sheen-blend);
+  background: linear-gradient(104deg, transparent 38%, var(--dss-sheen) 50%, transparent 62%);
+  opacity: 0;
+  transform: translateX(-70%);
+  animation: dss-sheen var(--dss-t-sheen) cubic-bezier(.32, .68, .3, 1) var(--dss-d-sheen) both;
+}
+
+/* ============================= wordmark =================================== */
+
+.dss-word {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.dss-word-main {
+  font-size: clamp(28px, 4.4vmin, 52px);
+  font-weight: 600;
+  letter-spacing: .012em;
+  color: var(--dss-ink);
+  opacity: 0;
+  transform: translateY(14px);
+  animation: dss-rise var(--dss-t-word) cubic-bezier(.2, .7, .3, 1) var(--dss-d-word) both;
+}
+
+.dss-word-sub {
+  margin-top: clamp(8px, 1.4vmin, 16px);
+  font-size: clamp(10px, 1.3vmin, 14px);
+  letter-spacing: .62em;
+  text-indent: .62em;
+  color: var(--dss-dim);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: dss-rise var(--dss-t-sub) cubic-bezier(.2, .7, .3, 1) var(--dss-d-sub) both;
+}
+
+/* ============================== bubbles =================================== */
+
+.dss-bubbles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.dss-bubble {
+  position: absolute;
+  bottom: 32%;
+  border-radius: 50%;
+  border: 1px solid var(--dss-accent-2);
+  opacity: 0;
+  animation: dss-bubble 2200ms linear both;
+}
+
+/* =============================== hint ===================================== */
+
+.dss-hint {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: clamp(22px, 5vh, 54px);
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: .18em;
+  color: var(--dss-dim);
+  opacity: 0;
+  animation: dss-hint-in var(--dss-t-hint) ease-out var(--dss-d-hint) both;
+}
+
+/* =============================== leaving ================================== */
+
+.dss-root.is-leaving {
+  pointer-events: none;
+  animation: dss-leave var(--dss-t-exit) cubic-bezier(.4, 0, .25, 1) both;
+}
+
+/* ============================ keyframes =================================== */
+
+@keyframes dss-veil-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dss-fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+@keyframes dss-drift-a {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(7vmax, 4vmax, 0) scale(1.12); }
+}
+@keyframes dss-drift-b {
+  from { transform: translate3d(0, 0, 0) scale(1.06); }
+  to   { transform: translate3d(-8vmax, -5vmax, 0) scale(.94); }
+}
+
+@keyframes dss-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes dss-fill-in { from { fill-opacity: 0; } to { fill-opacity: 1; } }
+@keyframes dss-stroke-out { from { stroke-opacity: 1; } to { stroke-opacity: 0; } }
+
+@keyframes dss-dot-pop {
+  0%   { opacity: 0; transform: scale(.2); }
+  62%  { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes dss-halo {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(.58); }
+  38%  { opacity: .95; transform: translate(-50%, -50%) scale(.92); }
+  100% { opacity: .42; transform: translate(-50%, -50%) scale(1.1); }
+}
+
+@keyframes dss-ring {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(.56); }
+  22%  { opacity: .55; }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.75); }
+}
+
+@keyframes dss-sheen {
+  0%   { opacity: 0; transform: translateX(-70%); }
+  26%  { opacity: .95; }
+  100% { opacity: 0; transform: translateX(70%); }
+}
+
+@keyframes dss-rise {
+  from { opacity: 0; transform: translateY(var(--dss-rise-from, 14px)); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes dss-bubble {
+  0%   { opacity: 0; transform: translateY(0) scale(.7); }
+  18%  { opacity: .5; }
+  70%  { opacity: .3; }
+  100% { opacity: 0; transform: translateY(calc(-1 * var(--dss-rise, 150px))) scale(1.05); }
+}
+
+@keyframes dss-hint-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: .58; transform: translateY(0); }
+}
+
+@keyframes dss-leave {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(1.035); }
+}
+
+/* ========================= reduced motion ================================= */
+
+.dss-root.dss-reduced .dss-aurora,
+.dss-root.dss-reduced .dss-grid { animation: none !important; opacity: .55; }
+.dss-root.dss-reduced .dss-halo { animation: none !important; opacity: .5; transform: translate(-50%, -50%) scale(1); }
+.dss-root.dss-reduced .dss-ring,
+.dss-root.dss-reduced .dss-sheen,
+.dss-root.dss-reduced .dss-bubble { animation: none !important; opacity: 0; }
+.dss-root.dss-reduced .dss-whale-path {
+  animation: none !important;
+  stroke-dashoffset: 0;
+  stroke-opacity: 0;
+  fill-opacity: 1;
+}
+.dss-root.dss-reduced .dss-dot { animation: none !important; opacity: 1; transform: none; }
+.dss-root.dss-reduced .dss-word-main,
+.dss-root.dss-reduced .dss-word-sub { animation: none !important; opacity: 1; transform: none; }
+.dss-root.dss-reduced .dss-hint { animation: none !important; opacity: .58; }
+
+@media (prefers-reduced-motion: reduce) {
+  .dss-aurora { animation: none !important; }
+}
