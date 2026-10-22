@@ -1,5 +1,7 @@
-# Build output
-dist/
+# Build output. The rendered launch screen is the one artifact that ships: the
+# plugin's host half reinstalls it, so a `github:` install needs it in the repo.
+dist/*
+!dist/splash.html
 
 # Python caches
 __pycache__/

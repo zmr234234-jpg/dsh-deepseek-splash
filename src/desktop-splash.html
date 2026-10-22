@@ -24,6 +24,10 @@ __FRAME_CSS__
     <div class="dss-boot" aria-live="polite">
       <h1 class="dss-boot-title" id="title">Starting DSH Desktop</h1>
       <p class="dss-boot-status" id="status">First launch may take a moment.</p>
+      <!-- Launch-screen contract: this page is loaded with ?theme=dark|light and
+           the shell writes its boot lines into #title/#status. DSH Desktop 0.12
+           stopped writing #progress; the element stays for older launchers, and
+           it is empty by design on 0.12+. -->
       <p class="dss-boot-progress" id="progress"></p>
     </div>
     <script>

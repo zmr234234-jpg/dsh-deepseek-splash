@@ -1,7 +1,7 @@
 {
   "name": "dsh-deepseek-splash",
-  "version": "1.0.0",
-  "description": "DeepSeek 开屏动画：把同一段鲸鱼片头（描边自绘 -> 点灯 -> 填充成形 -> 落款）接到 DSH Desktop 的启动画面，并作为可选的全屏客户端浮层。DeepSeek opening animation for DeepSeek Harness: the whale line-draw/fill/wordmark intro rendered as DSH Desktop's launch screen, plus the same animation available as an opt-in full-screen client overlay.",
+  "version": "1.1.0",
+  "description": "DeepSeek 开屏动画：把同一段鲸鱼片头（描边自绘 -> 点灯 -> 填充成形 -> 落款）接到 DSH Desktop 的启动画面，并在桌面更新覆盖启动页后自动装回；同一段动画也可作为可选的全屏客户端浮层。DeepSeek opening animation for DeepSeek Harness: the whale line-draw/fill/wordmark intro rendered as DSH Desktop's launch screen, reinstalled automatically after a desktop update, plus the same animation as an opt-in full-screen client overlay.",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
@@ -12,6 +12,12 @@
       "default": "./lib/client.js"
     },
     "./package.json": "./package.json"
+  },
+  "scripts": {
+    "test": "node tools/smoke_host.mjs && node tools/smoke_client.mjs",
+    "render": "py -3 tools/build_splash.py",
+    "install-splash": "py -3 tools/build_splash.py --apply",
+    "status": "py -3 tools/build_splash.py --status"
   },
   "dsh": {
     "bundle": {
@@ -26,29 +32,33 @@
   },
   "files": [
     "lib",
+    "dist",
     "assets/whale.svg",
     "assets/preview.html",
     "cordis.patch.yml",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ],
   "keywords": [
     "deepseek",
     "deepseek-harness",
     "dsh",
     "dsh-plugin",
+    "dsh-desktop",
     "client-plugin",
     "splash",
+    "launch-screen",
     "opening-animation"
   ],
   "license": "MIT",
-  "author": "zmr234234-jpg",
+  "author": "zhang-23x",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zmr234234-jpg/dsh-deepseek-splash.git"
+    "url": "git+https://github.com/zhang-23x/dsh-deepseek-splash.git"
   },
-  "homepage": "https://github.com/zmr234234-jpg/dsh-deepseek-splash#readme",
+  "homepage": "https://github.com/zhang-23x/dsh-deepseek-splash#readme",
   "bugs": {
-    "url": "https://github.com/zmr234234-jpg/dsh-deepseek-splash/issues"
+    "url": "https://github.com/zhang-23x/dsh-deepseek-splash/issues"
   },
   "engines": {
     "node": ">=20"
